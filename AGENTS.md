@@ -77,14 +77,16 @@ No env keys are required for the site to build — blog, projects, and pages are
 
 ## Build & Deploy
 
+**Data flow: local edits → commit + push to GitHub (source mirror) → `npx vercel --prod` → live on juansworld.xyz.**
+
+**Vercel is the host.** It serves juansworld.xyz, and `npx vercel --prod` is the step that publishes content — the site does not change until that deploy completes. There is no git-connected deploy and no CI: pushing to GitHub publishes nothing and triggers nothing. The GitHub repo (github.com/vote4arealclown/juansworld.xyz) is a public mirror and backup of the source; keep it in sync with what's deployed. When someone says "push it" or "ship it", they mean all three, in order: commit, push to GitHub, `npx vercel --prod`.
+
 ```bash
 npm run lint
 npm run check
 npm run build
 npx vercel --prod
 ```
-
-**The site ships only via `npx vercel --prod`.** There is no git-connected deploy and no CI — pushing to GitHub does not publish anything, and the site does not update until the Vercel CLI deploy completes. The GitHub repo (github.com/vote4arealclown/juansworld.xyz) is a public source mirror; keep it in sync with what's deployed, but treat Vercel as the only deploy path. When someone says "push it" or "ship it", they mean: commit, push to GitHub, then `npx vercel --prod` — in that order, all three.
 
 **Verify the custom domain actually moved.** As of 2026-10-13, `npx vercel --prod` aliased the deployment URL but left `juansworld.xyz` pointing at the previous deployment. After every deploy, check `curl -s -o /dev/null -w '%{http_code}' https://juansworld.xyz/<new-path>` (expect 200, not 404); if it's stale, retarget with `npx vercel alias set <new-deployment-url> juansworld.xyz`. `npx vercel alias ls` shows what the domain currently points to.
 
