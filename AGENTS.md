@@ -86,6 +86,8 @@ npx vercel --prod
 
 **The site ships only via `npx vercel --prod`.** There is no git-connected deploy and no CI — pushing to GitHub does not publish anything, and the site does not update until the Vercel CLI deploy completes. The GitHub repo (github.com/vote4arealclown/juansworld.xyz) is a public source mirror; keep it in sync with what's deployed, but treat Vercel as the only deploy path. When someone says "push it" or "ship it", they mean: commit, push to GitHub, then `npx vercel --prod` — in that order, all three.
 
+**Verify the custom domain actually moved.** As of 2026-10-13, `npx vercel --prod` aliased the deployment URL but left `juansworld.xyz` pointing at the previous deployment. After every deploy, check `curl -s -o /dev/null -w '%{http_code}' https://juansworld.xyz/<new-path>` (expect 200, not 404); if it's stale, retarget with `npx vercel alias set <new-deployment-url> juansworld.xyz`. `npx vercel alias ls` shows what the domain currently points to.
+
 ## Common Tasks
 
 - **Add a blog post**: `content/blog/<slug>.mdx`, then `npm run check`.
