@@ -1,0 +1,8 @@
+blockcrush
+*.apk
+*.xapk
+.claude
+.agents
+.vercel
+.next
+node_modules

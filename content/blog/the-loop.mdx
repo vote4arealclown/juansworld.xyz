@@ -1,0 +1,47 @@
+---
+title: "A Machine That Files a Report on Itself Every Six Hours"
+date: "2026-10-13"
+description: "I built a clock-driven prediction loop that fetches odds, prices games, audits its own output, and drafts articles — and it works because it has nowhere to hide."
+tags: ["ai", "automation", "prediction", "loopline"]
+author: "Jason Spooner"
+---
+
+Every six hours, whether I'm awake or not, a machine on my desk files a report on itself. It has been doing it since September. It has missed exactly the ticks I can explain, and it writes down the ones it misses too.
+
+This is the loop, and this post is the short version of how it works and why it's built the way it is.
+
+## A clock, not a chat
+
+Most people use AI like a conversation: prompt in, answer out, hope for the best. The loop is not a conversation. It's a clock.
+
+A Python daemon wakes up on a fixed interval and walks nineteen stations, one belt: fetch schedules, injuries, and odds from a dozen sources; price every game with an explicit probability; audit what it just wrote by re-deriving it from the raw snapshots; settle yesterday's predictions with a Brier score; then draft the recap. Each station returns one of three words — ok, skipped, or failed — and a sentence. A station that crashes doesn't stop the belt. It gets recorded, and the chain continues.
+
+**Failures are data** isn't a slogan on the wall. It's the error-handling strategy.
+
+## The ledger is the teacher
+
+Every prediction the loop makes is a row in an append-only CSV file: a binary question, my model's probability, the market's probability, the edge, and a permanent grade once the game is over. Nothing is edited retroactively. When the model is wrong, the row stays wrong, with the number it earned.
+
+The audit station exists because I don't trust the predict station. It re-derives every prediction from the raw snapshots and flags mismatches. On its first run it caught 31 malformed rows. The night a crash truncated the ledger, the machine reconstructed the missing rows, marked them as reconstructed, and filed a postmortem. Honesty is cheaper than discovery.
+
+## The models, stated honestly
+
+The loop prices NFL games with an Elo rating — K=32, a 55-point home edge — walked over every regular-season game from 1999 through 2025. That's 6,967 games. The validation number: a Brier score of 0.228. The betting market, over the same games, scores 0.213.
+
+Read that again, because I mean it: **the market is the better grader, said plainly.** I'm not building the loop to outsmart the closing line. I'm building it so that every edge I think I have is written down before the game, with a number attached, where a six-hour clock can check my work. Transparent beats clever while the model is young.
+
+## The 8B in the basement
+
+The loop also writes. A local 8-billion-parameter model, chosen to fit this machine's memory budget, drafts the daily recap and the contrarian briefs. It never gets to look anything up. I hand it a block of verified facts — ledger rows, injury reports, the teaser card, calibration numbers — with one instruction: use only these numbers, invent nothing.
+
+It still invents things sometimes. Team-probability swaps. Funding rates that don't exist. Records that sound right. Those failure modes are documented in the project journal like everything else, because the day I stop writing down how the machine lies is the day I start believing it.
+
+Every draft goes to a review folder. I edit. I publish. The machine's name is never on anything it didn't earn.
+
+## What it will never do
+
+Two hard rules, kept in code and in habit. The loop informs wagers; it never places them. And it never auto-publishes — no output reaches a public page without a human edit pass.
+
+Anyone selling you a system that skips that step is selling a story.
+
+A machine that files a report on itself every six hours has nowhere to hide. That's not a side effect. It's the entire design.

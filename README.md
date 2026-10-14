@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JuansWorld.XYZ
 
-## Getting Started
+Juan's personal site: what he builds with AI, and a notebook about building it. Blog posts are bylined Jason Spooner.
 
-First, run the development server:
+## Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, TypeScript)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) + `@tailwindcss/typography`
+- **Blog**: MDX in `content/blog/`, rendered with `gray-matter` + `next-mdx-remote`
+- **Email**: [Resend](https://resend.com/) (contact form)
+- **Analytics**: Google Analytics (`@next/third-parties`) + Vercel Analytics
+- **Deployment**: [Vercel](https://vercel.com/)
+
+## Pages
+
+- `/` — Home: intro, project cards, latest posts
+- `/projects` — the three featured projects (data: `lib/projects.ts`)
+- `/projects/[slug]` — loopline, saskpoly, chilliboys breakdowns
+- `/blog` — post index; `/blog/[slug]` — MDX posts from `content/blog/`
+- `/now` — what I'm working on this month (hand-edited)
+- `/contact` — contact form (sends email via Resend)
+- `/privacy-policy`, `/terms-of-service`
+
+The old `/games` section was removed 2026-10-13; it redirects to `/`.
+
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # dev server
+npm run lint     # eslint
+npm run check    # validate blog content (frontmatter, slugs, dates)
+npm run build    # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Adding a blog post
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Drop `content/blog/my-post.mdx`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```mdx
+---
+title: "The Title"
+date: "2026-10-13"
+description: "One sentence, shown on the index and in metadata."
+tags: ["ai"]
+---
 
-## Learn More
+Post body in MDX...
+```
 
-To learn more about Next.js, take a look at the following resources:
+Then run `npm run check`. Slug = filename; `author` defaults to Jason Spooner.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+No keys are required to build. Optional (see `.env.local.example`):
 
-## Deploy on Vercel
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_GA_ID` | Enables Google Analytics |
+| `RESEND_API_KEY` | Contact form sending |
+| `CONTACT_EMAIL` | Inbox for contact form submissions |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npx vercel --prod
+```
+
+Production URL: https://juansworld.xyz
