@@ -1,0 +1,45 @@
+---
+title: "The Safety Meetings Were Real. The Records Didn't Exist."
+date: "2026-10-15"
+description: "I built the shop an offline transcriber: drop a WhatsApp voice note in a folder, get the meeting back in Spanish and English, as .txt and .pdf. Nothing uploads, ever."
+tags: ["ai", "agents", "client-work", "chilliboys"]
+author: "Jason Spooner"
+---
+
+A metal shop I work with in Mexico has a safety system I'm proud of: a fifteen-minute briefing before every shift, one topic per day, signed by everyone on the floor. The signed sheets get filed. They are evidence, not decoration.
+
+One gap: the meetings themselves evaporated. They happen in Spanish, on the floor, half of them as WhatsApp voice notes sent between the jobsite and the office. A voice note is a record for about a day. Then it's scroll.
+
+So I built the shop an offline transcriber. This is what it does, and why it's built the way it's built.
+
+## What it does
+
+Drop a voice note in a folder. The app detects the spoken language, transcribes it with Whisper running on the CPU, translates it into the other language, and files four outputs per recording: a plain .txt and a formatted .pdf in Spanish, the same two in English. Spanish audio comes back in Spanish and English; English audio comes back in English and Spanish. The crew speaks one language; the paperwork speaks both.
+
+The PDF carries the company logo in the header and a metadata block — source file, detected language and confidence, recording time, model, translation provenance — because a document that looks like it belongs in the binder ends up in the binder. Every file is named by recording date, so it sorts next to the signed briefing sheets it belongs with.
+
+The design rule has a name: binder-grade. If an output can't sit in the safety binder next to the signed sheets, it doesn't ship. That single rule decided the logo, the metadata block, the page numbers, and the file naming. Constraints are cheaper than features.
+
+## The numbers
+
+Everything runs offline. The only internet use is one-time model downloads: about 460 MB for the transcription model, about 310 for the translation model. After that, the machine never talks to anyone.
+
+It ships as a single Windows .exe a foreman can double-click — no installer, no account, no subscription, nothing to patch. It is sized for the actual machine it will live on: a Ryzen 5 with 16 GB of RAM. On that box the small Whisper model is the ceiling. The medium model is more accurate and too slow on a CPU without a dedicated GPU, so the answer is to accept the ceiling and print it here, before anyone hits it.
+
+## The known flaws, in ascending order of annoyance
+
+Three. The PDFs speak only Windows-1252, so an arrow or a smart quote from outside the character set prints as a question mark. Meeting transcripts are mostly words, so this costs little — and it is the price of PDFs that always open.
+
+The translation is machine translation. It will produce fluent wrongness on a mumbled name or shop slang, which is why every transcript header records model and provenance: a wrong line gets traced to its source instead of argued about.
+
+And the deepest one: transcription is not understanding. The tool files what was said. Whether what was said was correct is still the supervisor's job, same as it was with the pen.
+
+## Why offline is the point
+
+A shop's safety record is not a cloud product. It belongs to the owner, in his filing cabinet, and the day a client, an insurer, or an inspector asks for it, the answer should be a folder, not a login. Offline also means the tool outlives me: no API key to lapse, no service to sunset, no pricing tier to change. The .exe and its 770 MB of models keep working as long as the machine does.
+
+## Where the human stays
+
+The machine types; the owner decides — same rule as the rest of this engagement. The supervisor still reviews anything that goes in the binder. The tool just makes sure the binder finally gets the one artifact that was missing.
+
+The briefing gets signed. The sheet gets filed. Now the meeting gets kept.
