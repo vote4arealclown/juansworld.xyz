@@ -39,6 +39,33 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "twoagent-loop",
+    name: "twoagent-loop",
+    tagline:
+      "Two CPU-only agents on two machines, working one pipeline — and nothing ships without a human signature.",
+    summary:
+      "The Loop's rulebook, split across two machines. One collects: it fetches pages, respects robots.txt, and compiles facts a literal quote can prove. The other writes: it drafts from verified facts alone, then a rule audit re-derives every citation and number before the draft lands in a review queue. The agents heckle each other in character. The hard rules still apply.",
+    status: "Private. Two machines on one home network.",
+    stack: [
+      "Python 3.11, stdlib only",
+      "clock.py — fixed stations per role, launchd + systemd",
+      "One shared folder (SMB/Syncthing); each machine appends only its own files",
+      "qwen3:8b on local Ollama, CPU-only",
+      "Fact compiler — a quote must literally exist in the saved page text",
+      "Rule audit — every citation and number re-derived from the cited facts",
+      "approve.py — the only door from draft to published",
+      "dashboard.py — read-only web UI; discuss.py — the agents argue on schedule",
+    ],
+    body: [
+      "One machine was doing every job, so I split the jobs by trust. Machine A, the collector, works a fixed list of sources — robots.txt checked before every fetch, delays between sites, unchanged pages skipped — then saves every page as a snapshot and turns it into facts. Machine B, the writer, never sees a raw page. It selects unseen verified facts, drafts from those alone, and files the draft for review. Between them there is no API and no message queue: one shared folder, each machine appending only to its own files, so the sync is safe by construction instead of by care.",
+      "The collector's fact step is a compiler. A local 8B model proposes facts from the page text; code disposes. A fact survives only if its quote literally appears in the saved snapshot, and every snapshot is kept — each fact can be walked back to the raw HTML it came from. Facts that can't prove their quote don't compile. The writer's diet is compiled facts only, which is what gives the instruction 'invent nothing' any teeth.",
+      "Every draft gets audited twice. First, in code: every citation must point at a real fact id, and every number in the prose must appear in the facts it cites. Then an advisory LLM audit hunts the 8B's documented failure modes — swapped numbers, fabricated ids, claims with nothing behind them. The confession, printed here before anyone else prints it: the grader is the same size model as the graded, an 8B reading an 8B. The rule audit is the seatbelt; the advisory one is a second pair of eyes, not a verdict.",
+      "Then the machine stops. Drafts land in a review queue, and the only way out is approve.py, run by hand: approve, or reject with a reason that gets written down. 'Invented a price' is a real entry in the log. Nothing is ever auto-published. Failures are data here too — every station records status, seconds, and detail to an append-only CSV, and a crash moves on without stopping the belt.",
+      "The cast is Statler on the collector and Waldorf on the writer, because the job involves heckling. A discussion script runs them on their own machines' Ollamas, alternating turns on a topic grounded in verified facts the collector actually compiled, saving transcripts to the shared folder. If the second machine is unreachable, both voices run locally and the transcript's front matter records where each voice really was — the show goes on, and the record stays honest. A stdlib-only dashboard reads the whole folder — facts, drafts with their audit results, verdicts, per-station logs — and never writes anything.",
+      "The limits, printed here before anyone hits them: CPU inference runs at roughly 3 to 10 tokens per second on a 7-to-8B model, so every pass is bounded — a cap on drafts per run, a cap on characters read per page. The rule audit catches bad citations and invented numbers; it cannot judge whether the prose is fair. That job, like the publish button, stays with the human.",
+    ],
+  },
+  {
     slug: "saskpoly",
     name: "SaskPoly — The Prediction Desk",
     tagline: "Free picks, graded in public, losses included.",

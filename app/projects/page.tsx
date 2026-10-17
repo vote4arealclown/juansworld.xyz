@@ -5,7 +5,7 @@ import { projects } from "@/lib/projects";
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "What I build with AI: a self-reporting prediction loop, a public prediction desk, and agent-built client work.",
+    "What I build with AI: a self-reporting prediction loop, a two-machine agent pipeline, a public prediction desk, and agent-built client work.",
 };
 
 export default function ProjectsPage() {
@@ -16,7 +16,7 @@ export default function ProjectsPage() {
           Projects
         </h1>
         <p className="mt-4 text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-          Three working systems, one habit: write it down before the result, so
+          Four working systems, one habit: write it down before the result, so
           afterward there is a record instead of a story.
         </p>
       </div>

@@ -1,0 +1,43 @@
+---
+title: "Two Machines, One Pipeline, and a Human Holding the Pen"
+date: "2026-10-17"
+description: "I split the loop's jobs across two machines: one collects pages and compiles facts a quote can prove, the other drafts from verified facts alone — and a human still signs every word."
+tags: ["ai", "agents", "automation", "twoagent-loop"]
+author: "Jason Spooner"
+---
+
+Two machines. Two agents. One shared folder. Zero drafts published without me.
+
+This week I took the loop's rulebook — clock-driven stations, failures are data, audit by re-deriving, never auto-publish — and split its jobs across two machines on my home network. Machine A collects. Machine B writes. Neither can do the other's job, and the only channel between them is a folder that syncs. Call it a sneakernet pipeline: data crosses from one machine to the other only as a file, and each machine appends only to its own files, so the sync is safe by construction instead of by care.
+
+## The collector compiles
+
+Machine A, the collector, works a fixed list of sources. Robots.txt is checked before every fetch; if it can't be read, the site is skipped. There is a delay between sites, and unchanged pages are skipped. Every page is saved as a snapshot — raw HTML plus extracted text.
+
+Then the collector compiles facts. A local 8B model proposes them; code disposes. A fact survives only if its quote literally appears in the saved page text. Facts that can't prove their quote don't compile. Every snapshot is kept, so any fact can be walked back to the raw page it came from.
+
+## The writer never sees the internet
+
+Machine B, the writer, selects unseen verified facts and drafts from that block alone. It never sees a raw page, never fetches anything, never gets to look anything up. "Invent nothing" is a weak instruction to give a model that can browse. It is a much stronger instruction when the diet is pre-verified facts — the only things it can invent with are the things that already proved themselves.
+
+## The audit, twice
+
+Every draft gets audited two ways. First, in code: every citation must point at a real fact id, and every number in the prose must appear in the facts it cites. Second, a second model reads the draft for the documented failure modes of the first — swapped numbers, fabricated ids, claims with nothing behind them.
+
+The confession, printed here before anyone else prints it: the grader is the same size as the graded. An 8B audits an 8B, and they share blind spots. The rule audit is the seatbelt; the advisory audit is a second pair of eyes, not a verdict.
+
+## The gate
+
+Then the machine stops. Drafts land in a review queue, and the only way out is a script I run by hand: approve, or reject with a reason that gets written down. "Invented a price" is a real entry in the log. Nothing is ever auto-published — same rule as the loop, kept in code and in habit.
+
+## The hecklers
+
+The collector is Statler. The writer is Waldorf. They are named after the two old men in the balcony because the job involves heckling, and a discussion script lets them do it on schedule: alternating turns on a topic, each running on its own machine's Ollama, grounded in verified facts the collector actually compiled. If the second machine is unreachable, both voices run locally and the transcript's front matter records where each voice really was. The show goes on. The record stays honest.
+
+A read-only dashboard watches the whole folder — facts, drafts, audit results, verdicts, per-station logs — and never writes anything.
+
+## The limits, up front
+
+CPU inference runs at roughly 3 to 10 tokens per second on a 7-to-8B model, so every pass is bounded: a cap on drafts per run, a cap on characters read per page. The rule audit catches bad citations and invented numbers. It cannot judge whether the prose is fair. That job, like the publish button, stays with me.
+
+One machine collects. One writes. Neither publishes. I'm the signature at the end.

@@ -13,10 +13,12 @@ export default function HomePage() {
         </h1>
         <p className="mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-400">
           I'm Juan. I run a clock-driven prediction loop that prices games and
-          files a report on itself every six hours, a published prediction desk
-          that grades every pick in public, and the occasional client project
-          built mostly by agents and supervised by a human. This site is the
-          workshop door — projects on one side, the notebook on the other.
+          files a report on itself every six hours, a two-machine agent
+          pipeline that collects facts, drafts posts, and waits for my
+          signature, a published prediction desk that grades every pick in
+          public, and the occasional client project built mostly by agents and
+          supervised by a human. This site is the workshop door — projects on
+          one side, the notebook on the other.
         </p>
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
           <Link
@@ -36,7 +38,7 @@ export default function HomePage() {
 
       <section className="mt-20">
         <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <Link
               key={project.slug}
